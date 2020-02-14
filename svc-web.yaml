@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: web-server
+  namespace: kulikov
+  labels:
+    app: web-server
+  annotations:
+    cloud.google.com/load-balancer-type: "Internal"
+spec:
+  ports:
+  - name: http
+    port: 8085
+    targetPort: 8085
+  selector:
+    app: web-server
+  type: ClusterIP
+

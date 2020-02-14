@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+  namespace: kulikov
+spec:
+  selector:
+    matchLabels:
+      app: web-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web-server
+    spec:
+      containers:
+      - name: web-server
+        image: quay.io/myafk/interactive:stable
+        command: ["interactive" , "ingress"]
+        env:
+          - name: ELASTICSEARCH_HOSTS
+            value: http://sts-elasticsearch-0.svc-elasticsearch.kulikov.svc.cluster.local:9200
+          - name: REDIS_MASTER_HOST
+            value: http://redis-master.kulikov.svc.cluster.local:6379
+          - name:  REDIS_SLAVE_HOST
+            value: http://redis-slave.kulikov.svc.cluster.local:6379
+          - name: KUBERNETES_SERVICE_HOST
+            value: '10.8.0.1'
+          - name: KUBERNETES_SERVICE_PORT
+            value: '443'
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8085
